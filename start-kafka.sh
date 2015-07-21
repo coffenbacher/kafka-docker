@@ -7,8 +7,9 @@ if [[ -z "$KAFKA_ADVERTISED_PORT" ]]; then
 fi
 if [[ -z "$KAFKA_BROKER_ID" ]]; then
     echo $CONTAINER_ID
-    export KAFKA_BROKER_ID=$(docker inspect $CONTAINER_ID | jq --raw-output '.[0] | .Name' | awk -F_ '{print $3}')
-    echo $KAFKA_BROKER_ID    
+    export HOSTNUMBER=$(echo $HOSTNAME | egrep -o '[0-9]+')
+    export KAFKA_BROKER_ID=$HOSTNUMBER$KAFKA_ADVERTISED_PORT
+    echo $KAFKA_BROKER_ID
 fi
 if [[ -z "$KAFKA_LOG_DIRS" ]]; then
     export KAFKA_LOG_DIRS="/kafka/kafka-logs-$KAFKA_BROKER_ID"
