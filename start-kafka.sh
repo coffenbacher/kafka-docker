@@ -1,11 +1,14 @@
 #!/bin/bash
+printenv
 export CONTAINER_ID=$(cat /proc/self/cgroup | grep "docker" | sed s/\\//\\n/g | tail -1)
 
 if [[ -z "$KAFKA_ADVERTISED_PORT" ]]; then
     export KAFKA_ADVERTISED_PORT=$(docker port $CONTAINER_ID 9092 | sed -r "s/.*:(.*)/\1/g")
 fi
 if [[ -z "$KAFKA_BROKER_ID" ]]; then
+    echo $CONTAINER_ID
     export KAFKA_BROKER_ID=$(docker inspect $CONTAINER_ID | jq --raw-output '.[0] | .Name' | awk -F_ '{print $3}')
+    echo $KAFKA_BROKER_ID    
 fi
 if [[ -z "$KAFKA_LOG_DIRS" ]]; then
     export KAFKA_LOG_DIRS="/kafka/kafka-logs-$KAFKA_BROKER_ID"
