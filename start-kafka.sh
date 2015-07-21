@@ -9,6 +9,7 @@ if [[ -z "$KAFKA_BROKER_ID" ]]; then
     echo $CONTAINER_ID
     export HOSTNUMBER=$(echo $HOSTNAME | egrep -o '[0-9]+')
     export KAFKA_BROKER_ID=$HOSTNUMBER$KAFKA_ADVERTISED_PORT
+    export KAFKA_ADVERTISED_HOST_NAME=$(route -n | awk '/UG[ \t]/{print $2}')
     echo $KAFKA_BROKER_ID
 fi
 if [[ -z "$KAFKA_LOG_DIRS" ]]; then
